@@ -221,7 +221,7 @@ export function useEntitiesSubscription() {
       `databases.${DATABASE_ID}.collections.${ENTITIES_COLLECTION_ID}.documents`,
       (response) => {
         const { events, payload } = response;
-        const typedPayload = payload as any; // Type assertion for Appwrite payload
+        const typedPayload = payload as Record<string, unknown>; // Type assertion for Appwrite payload
         
         // Handle different event types
         if (events.includes('databases.*.collections.*.documents.*.create')) {
