@@ -1,4 +1,4 @@
-# 🌟 Digital Ecosystem Garden
+# 🌟 Digital Ecosystem Garden.
 
 A living world of AI-generated digital beings that interact, build, and evolve in real-time. Create unique creatures through donations and watch them develop personalities, relationships, and behaviors in a dynamic ecosystem.
 
