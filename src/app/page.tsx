@@ -39,7 +39,7 @@ export default function Home() {
     return () => {
       behaviorEngine.stopBehaviorSystem();
     };
-  }, [storeEntities.length, updateEntity]);
+  }, [storeEntities.length, updateEntity, storeEntities]);
 
   if (isLoading) {
     return (

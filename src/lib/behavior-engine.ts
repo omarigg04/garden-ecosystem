@@ -39,7 +39,7 @@ export class BehaviorEngine {
     const nearbyEntities = this.findNearbyEntities(entity, allEntities, 150);
     const newBehavior = this.determineBehavior(entity, nearbyEntities);
     
-    let updatedEntity = { ...entity };
+    const updatedEntity = { ...entity };
     let hasChanged = false;
 
     // Update status if changed
@@ -114,7 +114,7 @@ export class BehaviorEngine {
   }
 
   private calculateBehaviorWeights(traits: string[], nearbyCount: number): Record<string, number> {
-    let weights = {
+    const weights = {
       exploring: 25,
       building: 15,
       socializing: 10,

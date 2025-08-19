@@ -30,7 +30,7 @@ export default function SuccessPage() {
           email: 'donor@example.com'
         });
         setStatus('success');
-      } catch (error) {
+      } catch {
         setStatus('error');
       }
     };
@@ -60,7 +60,7 @@ export default function SuccessPage() {
           <div className="text-red-500 text-6xl mb-6">⚠️</div>
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Something Went Wrong</h1>
           <p className="text-gray-600 mb-6">
-            We couldn't verify your payment or create your digital being. 
+            We couldn&apos;t verify your payment or create your digital being. 
             Please contact support if this issue persists.
           </p>
           <div className="space-y-3">
@@ -152,8 +152,8 @@ export default function SuccessPage() {
         <div className="mt-8 p-4 bg-yellow-50 rounded-lg">
           <h4 className="font-semibold text-yellow-800 mb-2">📧 Email Confirmation</h4>
           <p className="text-yellow-700 text-sm">
-            We've sent you an email confirmation with your digital being's details. 
-            Check your inbox at <strong>{entityInfo?.email}</strong> for your creature's unique ID and special features.
+            We&apos;ve sent you an email confirmation with your digital being&apos;s details. 
+            Check your inbox at <strong>{entityInfo?.email}</strong> for your creature&apos;s unique ID and special features.
           </p>
         </div>
       </div>

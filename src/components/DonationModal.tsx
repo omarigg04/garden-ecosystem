@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useEcosystemStore } from '@/store/useEcosystemStore';
 
 interface DonationModalProps {
   isOpen: boolean;
@@ -159,7 +158,7 @@ export default function DonationModal({ isOpen, onClose }: DonationModalProps) {
         </form>
 
         <p className="text-xs text-gray-500 mt-4 text-center">
-          Secure payment powered by Stripe. You'll receive your digital being after payment confirmation.
+          Secure payment powered by Stripe. You&apos;ll receive your digital being after payment confirmation.
         </p>
       </div>
     </div>

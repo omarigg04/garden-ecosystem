@@ -78,7 +78,7 @@ export function useUpdateEntity() {
   
   return useMutation({
     mutationFn: async ({ entityId, updates }: { entityId: string; updates: Partial<Entity> }) => {
-      const updateData: any = {};
+      const updateData: Record<string, unknown> = {};
       
       if (updates.name) updateData.name = updates.name;
       if (updates.status) updateData.status = updates.status;

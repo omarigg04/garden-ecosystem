@@ -47,7 +47,7 @@ export function validateStripeSignature(
 ): boolean {
   try {
     const elements = signature.split(',');
-    const signatureElements: any = {};
+    const signatureElements: Record<string, string> = {};
     
     for (const element of elements) {
       const [key, value] = element.split('=');
@@ -64,7 +64,7 @@ export function validateStripeSignature(
       Buffer.from(expectedSignature, 'hex'),
       Buffer.from(signatureElements.v1, 'hex')
     );
-  } catch (error) {
+  } catch {
     return false;
   }
 }
