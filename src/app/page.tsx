@@ -1,101 +1,180 @@
-import Image from "next/image";
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import EcosystemCanvas from '@/components/EcosystemCanvas';
+import DonationModal from '@/components/DonationModal';
+import { useEntities, useEntitiesSubscription } from '@/hooks/useEntities';
+import { useEcosystemStore } from '@/store/useEcosystemStore';
+import { BehaviorEngine } from '@/lib/behavior-engine';
+
+const behaviorEngine = new BehaviorEngine();
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
+  const { data: entities = [], isLoading, error } = useEntities();
+  const { 
+    setEntities, 
+    updateEntity, 
+    entities: storeEntities 
+  } = useEcosystemStore();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Subscribe to real-time updates
+  useEntitiesSubscription();
+
+  // Update store when data changes
+  useEffect(() => {
+    if (entities.length > 0) {
+      setEntities(entities);
+    }
+  }, [entities, setEntities]);
+
+  // Start behavior system when entities are loaded
+  useEffect(() => {
+    if (storeEntities.length > 0) {
+      behaviorEngine.startBehaviorSystem(storeEntities, (updatedEntity) => {
+        updateEntity(updatedEntity.id, updatedEntity);
+      });
+    }
+
+    return () => {
+      behaviorEngine.stopBehaviorSystem();
+    };
+  }, [storeEntities.length, updateEntity]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading Digital Ecosystem...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Failed to load ecosystem</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Digital Ecosystem Garden</h1>
+              <p className="text-gray-600">A living world of AI-generated digital beings</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">{storeEntities.length}</span> beings alive
+              </div>
+              <button
+                onClick={() => setIsDonationModalOpen(true)}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              >
+                Create a Being
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">The Living Ecosystem</h2>
+            <p className="text-gray-600 mb-4">
+              Watch unique AI-generated beings interact, build, and evolve in real-time. 
+              Each creature has its own personality, appearance, and behaviors.
+            </p>
+            <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                <span>Exploring: {useEcosystemStore.getState().getEntitiesByStatus('exploring').length}</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                <span>Building: {useEcosystemStore.getState().getEntitiesByStatus('building').length}</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
+                <span>Socializing: {useEcosystemStore.getState().getEntitiesByStatus('socializing').length}</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-gray-500 rounded-full mr-2"></div>
+                <span>Resting: {useEcosystemStore.getState().getEntitiesByStatus('resting').length}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Canvas Container */}
+          <div className="flex justify-center">
+            <div className="relative">
+              <EcosystemCanvas 
+                entities={storeEntities}
+                width={1200}
+                height={800}
+              />
+              <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded text-sm">
+                Use mouse wheel to zoom • Drag to pan
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Instructions */}
+        <div className="mt-8 grid md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">How It Works</h3>
+            <ol className="list-decimal list-inside space-y-2 text-gray-600">
+              <li>Make a donation ($1 minimum)</li>
+              <li>AI generates your unique digital being</li>
+              <li>Watch it explore and interact with others</li>
+              <li>Influence the ecosystem with larger donations</li>
+            </ol>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Unique Features</h3>
+            <ul className="space-y-2 text-gray-600">
+              <li>• AI-generated personalities</li>
+              <li>• Procedural sprite graphics</li>
+              <li>• Real-time behavior simulation</li>
+              <li>• Social interactions & relationships</li>
+            </ul>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Coming Soon</h3>
+            <ul className="space-y-2 text-gray-600">
+              <li>• Building construction system</li>
+              <li>• Premium sprite graphics</li>
+              <li>• Ecosystem events & evolution</li>
+              <li>• Mobile companion app</li>
+            </ul>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+      <DonationModal
+        isOpen={isDonationModalOpen}
+        onClose={() => setIsDonationModalOpen(false)}
+      />
     </div>
   );
 }
