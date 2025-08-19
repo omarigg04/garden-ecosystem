@@ -6,12 +6,14 @@ import DonationModal from '@/components/DonationModal';
 import { useEntities, useEntitiesSubscription } from '@/hooks/useEntities';
 import { useEcosystemStore } from '@/store/useEcosystemStore';
 import { BehaviorEngine } from '@/lib/behavior-engine';
+import { Entity } from '@/types';
 
 const behaviorEngine = new BehaviorEngine();
 
 export default function Home() {
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
   const { data: entities = [], isLoading, error } = useEntities();
+  const typedEntities = entities as Entity[];
   const { 
     setEntities, 
     updateEntity, 
@@ -23,10 +25,10 @@ export default function Home() {
 
   // Update store when data changes
   useEffect(() => {
-    if (entities.length > 0) {
-      setEntities(entities);
+    if (typedEntities.length > 0) {
+      setEntities(typedEntities);
     }
-  }, [entities, setEntities]);
+  }, [typedEntities, setEntities]);
 
   // Start behavior system when entities are loaded
   useEffect(() => {
