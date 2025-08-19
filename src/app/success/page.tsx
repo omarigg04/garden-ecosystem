@@ -127,7 +127,7 @@ export default function SuccessPage() {
           </div>
           
           <div className="bg-gray-50 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Your Being's Features</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Your Being&apos;s Features</h3>
             <ul className="space-y-2 text-gray-600">
               <li>• AI-generated unique personality</li>
               <li>• Procedural appearance with special features</li>
