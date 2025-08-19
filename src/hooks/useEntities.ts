@@ -221,22 +221,23 @@ export function useEntitiesSubscription() {
       `databases.${DATABASE_ID}.collections.${ENTITIES_COLLECTION_ID}.documents`,
       (response) => {
         const { events, payload } = response;
+        const typedPayload = payload as any; // Type assertion for Appwrite payload
         
         // Handle different event types
         if (events.includes('databases.*.collections.*.documents.*.create')) {
           // New entity created
           const newEntity: Entity = {
-            id: payload.$id,
-            name: payload.name,
-            donorEmail: payload.donorEmail,
-            species: payload.species,
-            personality: JSON.parse(payload.personality),
-            appearance: JSON.parse(payload.appearance),
-            position: JSON.parse(payload.position),
-            status: payload.status,
-            relationships: payload.relationships || [],
-            createdAt: payload.createdAt,
-            lastActive: payload.lastActive
+            id: typedPayload.$id,
+            name: typedPayload.name,
+            donorEmail: typedPayload.donorEmail,
+            species: typedPayload.species,
+            personality: JSON.parse(typedPayload.personality),
+            appearance: JSON.parse(typedPayload.appearance),
+            position: JSON.parse(typedPayload.position),
+            status: typedPayload.status,
+            relationships: typedPayload.relationships || [],
+            createdAt: typedPayload.createdAt,
+            lastActive: typedPayload.lastActive
           };
           
           queryClient.setQueryData(['entities'], (oldEntities: Entity[] | undefined) => {
@@ -252,17 +253,17 @@ export function useEntitiesSubscription() {
         if (events.includes('databases.*.collections.*.documents.*.update')) {
           // Entity updated
           const updatedEntity: Entity = {
-            id: payload.$id,
-            name: payload.name,
-            donorEmail: payload.donorEmail,
-            species: payload.species,
-            personality: JSON.parse(payload.personality),
-            appearance: JSON.parse(payload.appearance),
-            position: JSON.parse(payload.position),
-            status: payload.status,
-            relationships: payload.relationships || [],
-            createdAt: payload.createdAt,
-            lastActive: payload.lastActive
+            id: typedPayload.$id,
+            name: typedPayload.name,
+            donorEmail: typedPayload.donorEmail,
+            species: typedPayload.species,
+            personality: JSON.parse(typedPayload.personality),
+            appearance: JSON.parse(typedPayload.appearance),
+            position: JSON.parse(typedPayload.position),
+            status: typedPayload.status,
+            relationships: typedPayload.relationships || [],
+            createdAt: typedPayload.createdAt,
+            lastActive: typedPayload.lastActive
           };
           
           queryClient.setQueryData(['entities'], (oldEntities: Entity[] | undefined) => {
@@ -279,10 +280,10 @@ export function useEntitiesSubscription() {
           // Entity deleted
           queryClient.setQueryData(['entities'], (oldEntities: Entity[] | undefined) => {
             if (!oldEntities) return oldEntities;
-            return oldEntities.filter(entity => entity.id !== payload.$id);
+            return oldEntities.filter(entity => entity.id !== typedPayload.$id);
           });
           
-          queryClient.removeQueries({ queryKey: ['entity', payload.$id] });
+          queryClient.removeQueries({ queryKey: ['entity', typedPayload.$id] });
         }
       }
     );
