@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { databases, DATABASE_ID, ENTITIES_COLLECTION_ID } from '@/lib/appwrite';
+import client, { databases, DATABASE_ID, ENTITIES_COLLECTION_ID } from '@/lib/appwrite';
 import { Entity } from '@/types';
 import { Query } from 'appwrite';
 
@@ -217,7 +217,7 @@ export function useEntitiesSubscription() {
   
   React.useEffect(() => {
     // Subscribe to entity changes
-    const unsubscribe = databases.subscribe(
+    const unsubscribe = client.subscribe(
       `databases.${DATABASE_ID}.collections.${ENTITIES_COLLECTION_ID}.documents`,
       (response) => {
         const { events, payload } = response;
