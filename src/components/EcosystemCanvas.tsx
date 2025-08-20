@@ -40,6 +40,21 @@ export default function EcosystemCanvas({
   const [resources, setResources] = useState<Resource[]>([]);
   const [ecosystemInitialized, setEcosystemInitialized] = useState(false);
 
+  const drawUIOverlays = useCallback((ctx: CanvasRenderingContext2D) => {
+    // Draw ecosystem stats
+    if (ecosystemInitialized) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(10, 10, 200, 100);
+      
+      ctx.fillStyle = 'white';
+      ctx.font = '12px Arial';
+      ctx.fillText(`🌳 Biome Elements: ${biomeElements.length}`, 20, 30);
+      ctx.fillText(`👣 Active Traces: ${environmentalTraces.length}`, 20, 50);
+      ctx.fillText(`💎 Resources: ${resources.filter(r => r.amount > 0).length}`, 20, 70);
+      ctx.fillText(`🦋 Entities: ${entities.length}`, 20, 90);
+    }
+  }, [ecosystemInitialized, biomeElements.length, environmentalTraces.length, resources, entities.length]);
+
   const renderFrame = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -97,22 +112,6 @@ export default function EcosystemCanvas({
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, w, h);
   };
-
-  const drawUIOverlays = useCallback((ctx: CanvasRenderingContext2D) => {
-    // Draw ecosystem stats
-    if (ecosystemInitialized) {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-      ctx.fillRect(10, 10, 200, 100);
-      
-      ctx.fillStyle = 'white';
-      ctx.font = '12px Arial';
-      ctx.fillText(`🌳 Biome Elements: ${biomeElements.length}`, 20, 30);
-      ctx.fillText(`👣 Active Traces: ${environmentalTraces.length}`, 20, 50);
-      ctx.fillText(`💎 Resources: ${resources.filter(r => r.amount > 0).length}`, 20, 70);
-      ctx.fillText(`🦋 Entities: ${entities.length}`, 20, 90);
-    }
-  }, [ecosystemInitialized, biomeElements.length, environmentalTraces.length, resources, entities.length]);
-
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
