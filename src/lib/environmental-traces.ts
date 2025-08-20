@@ -1,4 +1,4 @@
-import { EnvironmentalTrace, Entity, Position, BiomeElement, Resource } from '@/types';
+import { EnvironmentalTrace, Entity, Position, BiomeElement } from '@/types';
 
 export class EnvironmentalTraceSystem {
   private traces: Map<string, EnvironmentalTrace> = new Map();
@@ -108,7 +108,7 @@ export class EnvironmentalTraceSystem {
     elementChanges: Partial<BiomeElement>,
     newElements?: BiomeElement[]
   } {
-    const traces: EnvironmentalTrace[] = [];
+    let traces: EnvironmentalTrace[] = [];
     let elementChanges: Partial<BiomeElement> = {};
     let newElements: BiomeElement[] = [];
 
@@ -133,9 +133,11 @@ export class EnvironmentalTraceSystem {
         }));
         
         // Reducir salud del elemento
-        elementChanges.health = Math.max(0, element.health - 20);
-        elementChanges.lastModified = new Date().toISOString();
-        elementChanges.modifiedBy = entity.id;
+        elementChanges = {
+          health: Math.max(0, element.health - 20),
+          lastModified: new Date().toISOString(),
+          modifiedBy: entity.id
+        };
         break;
 
       case 'water':
@@ -146,9 +148,11 @@ export class EnvironmentalTraceSystem {
           }));
           
           // Mejorar salud del elemento
-          elementChanges.health = Math.min(100, element.health + 15);
-          elementChanges.lastModified = new Date().toISOString();
-          elementChanges.modifiedBy = entity.id;
+          elementChanges = {
+            health: Math.min(100, element.health + 15),
+            lastModified: new Date().toISOString(),
+            modifiedBy: entity.id
+          };
         }
         break;
 

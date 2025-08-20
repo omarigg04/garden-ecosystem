@@ -349,6 +349,11 @@ export class ResourceManager {
       baseContribution *= 0.7;
     }
 
+    // Modificadores específicos por tipo de contribución y recurso
+    if (contributionType === 'restore' && resource.type === 'food') {
+      baseContribution *= 1.2;
+    }
+
     return baseContribution;
   }
 
