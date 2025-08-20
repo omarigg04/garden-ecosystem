@@ -108,9 +108,9 @@ export class EnvironmentalTraceSystem {
     elementChanges: Partial<BiomeElement>,
     newElements?: BiomeElement[]
   } {
-    let traces: EnvironmentalTrace[] = [];
+    const traces: EnvironmentalTrace[] = [];
     let elementChanges: Partial<BiomeElement> = {};
-    let newElements: BiomeElement[] = [];
+    const newElements: BiomeElement[] = [];
 
     switch (interactionType) {
       case 'plant':
