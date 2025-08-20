@@ -77,14 +77,14 @@ export default function EcosystemCanvas({
     });
 
     // Draw UI overlays
-    drawUIOverlays(ctx, width, height);
+    drawUIOverlays(ctx);
 
     // Restore context state
     ctx.restore();
 
     // Continue animation loop
     animationFrameRef.current = requestAnimationFrame(renderFrame);
-  }, [entities, viewport, width, height, ecosystemInitialized, biomeZones, biomeElements, environmentalTraces, resources]);
+  }, [entities, viewport, width, height, ecosystemInitialized, biomeZones, biomeElements, environmentalTraces, resources, drawUIOverlays]);
 
   const drawBackground = (ctx: CanvasRenderingContext2D, w: number, h: number) => {
     // Create a natural sky-to-ground gradient
@@ -98,7 +98,7 @@ export default function EcosystemCanvas({
     ctx.fillRect(0, 0, w, h);
   };
 
-  const drawUIOverlays = (ctx: CanvasRenderingContext2D, w: number, h: number) => {
+  const drawUIOverlays = useCallback((ctx: CanvasRenderingContext2D) => {
     // Draw ecosystem stats
     if (ecosystemInitialized) {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -111,7 +111,7 @@ export default function EcosystemCanvas({
       ctx.fillText(`💎 Resources: ${resources.filter(r => r.amount > 0).length}`, 20, 70);
       ctx.fillText(`🦋 Entities: ${entities.length}`, 20, 90);
     }
-  };
+  }, [ecosystemInitialized, biomeElements.length, environmentalTraces.length, resources, entities.length]);
 
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
